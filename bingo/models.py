@@ -1,6 +1,9 @@
+import uuid
+
 from django.db import models
 
 class Participantes(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     nombre = models.CharField(max_length=200)
     telefono = models.CharField(unique=True, max_length=20)
     carrera = models.CharField(max_length=200, blank=True, null=True)
@@ -18,10 +21,10 @@ class Participantes(models.Model):
             import qrcode
             from django.core.files.base import ContentFile
 
-            qr = qrcode.make(f"{self.nombre} - {self.correo}")
+            qr = qrcode.make(self.id)
             buffer = BytesIO()
             qr.save(buffer, format="PNG")
-            self.qr_code.save(f"{self.telefono}.png", ContentFile(buffer.getvalue()), save=False)
+            self.qr_code.save(f"{self.id}.png", ContentFile(buffer.getvalue()), save=False)
 
         super().save(*args, **kwargs)
 
