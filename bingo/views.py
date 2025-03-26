@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 
 from registro.permissions import IsAdmin
@@ -11,6 +11,8 @@ class ParticipanteViewSet(viewsets.ModelViewSet):
     queryset = Participantes.objects.all()
     serializer_class = ParticipanteSerializer
     permission_classes = [IsAdmin]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['telefono']
 
 
 def ver_qr(request, pk):
@@ -18,3 +20,4 @@ def ver_qr(request, pk):
     if participante.qr_code:
         return FileResponse(participante.qr_code.open(), content_type='image/png')
     return JsonResponse({'error': 'QR no encontrado'}, status=404)
+
