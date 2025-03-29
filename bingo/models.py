@@ -21,7 +21,7 @@ class Participantes(models.Model):
     cartones = models.IntegerField()
     entregado = models.BooleanField()
     fecha_entrega = models.DateTimeField(blank=True, null=True)
-    entregado_por = models.ForeignKey(User, models.DO_NOTHING, null=True, default=None)
+    entregado_por = models.ForeignKey(User, models.DO_NOTHING, null=True, default=None, blank=True)
     qr_code = models.URLField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
