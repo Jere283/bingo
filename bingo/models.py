@@ -1,4 +1,11 @@
 import uuid
+from io import BytesIO
+
+import cloudinary.uploader
+import cloudinary.api
+import qrcode
+from dotenv import load_dotenv
+load_dotenv()
 
 from django.db import models
 
@@ -13,18 +20,26 @@ class Participantes(models.Model):
     cartones = models.IntegerField()
     entregado = models.BooleanField()
     fecha_entrega = models.DateTimeField(blank=True, null=True)
-    qr_code = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+    qr_code = models.URLField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        config = cloudinary.config(secure=True)
         if not self.qr_code:
-            from io import BytesIO
-            import qrcode
-            from django.core.files.base import ContentFile
-
-            qr = qrcode.make(self.id)
             buffer = BytesIO()
+            qr = qrcode.make(str(self.id))
             qr.save(buffer, format="PNG")
-            self.qr_code.save(f"{self.id}.png", ContentFile(buffer.getvalue()), save=False)
+            buffer.seek(0)
+
+
+            response = cloudinary.uploader.upload(
+                buffer,
+                public_id=f"qr_codes/{self.telefono}",
+                unique_filename=True,
+                overwrite=True
+            )
+
+            print(response)
+            self.qr_code = response["secure_url"]
 
         super().save(*args, **kwargs)
 
