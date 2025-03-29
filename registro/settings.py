@@ -143,7 +143,7 @@ AUTH_USER_MODEL = 'auth_u.User'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Belize'
 
 USE_I18N = True
 

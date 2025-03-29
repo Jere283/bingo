@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from django.db import models
+from auth_u.models import User
 
 class Participantes(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -20,6 +21,7 @@ class Participantes(models.Model):
     cartones = models.IntegerField()
     entregado = models.BooleanField()
     fecha_entrega = models.DateTimeField(blank=True, null=True)
+    entregado_por = models.ForeignKey(User, models.DO_NOTHING, null=True)
     qr_code = models.URLField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
