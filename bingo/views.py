@@ -41,6 +41,7 @@ class MarcarComoEntregado(GenericAPIView):
 
                 participante.entregado = False
                 participante.fecha_entrega = None
+                participante.entregado_por = None
                 participante.save()
                 serializer = self.serializer_class(instance=participante)
 
