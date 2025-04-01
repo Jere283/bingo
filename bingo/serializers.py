@@ -7,7 +7,6 @@ from .models import Participantes
 
 class ParticipanteSerializer(serializers.ModelSerializer):
     entregado_por = UserRegisterSerializer(required=False, allow_null=True)
-    fecha_entrega = serializers.SerializerMethodField()
 
     class Meta:
         model = Participantes
@@ -24,10 +23,3 @@ class ParticipanteSerializer(serializers.ModelSerializer):
             participante.save()
 
         return participante
-
-    def get_fecha_entrega(self, obj):
-        """Convierte la fecha_entrega a GMT-6 antes de devolverla."""
-        if obj.fecha_entrega:
-            gmt_6 = pytz.timezone("America/Guatemala")  # O "America/Mexico_City"
-            return obj.fecha_entrega.astimezone(gmt_6).isoformat()
-        return None
