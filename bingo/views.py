@@ -61,6 +61,12 @@ class MarcarComoEntregado(GenericAPIView):
             participante.entregado_por = usuario
             participante.save()
             serializer = self.serializer_class(instance=participante)
+
+            data = serializer.data
+            if data.get("fecha_entrega"):
+                fecha_entrega = datetime.fromisoformat(data["fecha_entrega"]).replace(tzinfo=pytz.utc)
+                data["fecha_entrega"] = fecha_entrega.astimezone(gmt_6).isoformat()
+
             return Response(data={
                 "data": serializer.data,
                 "message": "El carton del participante fue marcado como entregado",
