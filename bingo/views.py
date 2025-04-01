@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.utils.timezone import make_aware
 from rest_framework import viewsets, filters, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import GenericAPIView
@@ -52,8 +53,11 @@ class MarcarComoEntregado(GenericAPIView):
 
             usuario = User.objects.get(username=request.user.username)
 
+            gmt_6 = pytz.timezone("America/Guatemala")  
+            fecha_entrega_gmt6 = make_aware(datetime.now(), gmt_6)
+
             participante.entregado = True
-            participante.fecha_entrega = datetime.now()
+            participante.fecha_entrega = fecha_entrega_gmt6
             participante.entregado_por = usuario
             participante.save()
             serializer = self.serializer_class(instance=participante)
