@@ -23,6 +23,7 @@ class Participantes(models.Model):
     fecha_entrega = models.DateTimeField(blank=True, null=True)
     entregado_por = models.ForeignKey(User, models.DO_NOTHING, null=True, default=None, blank=True)
     qr_code = models.URLField(blank=True, null=True)
+    correo_enviado = models.BooleanField(default=False, blank=True)
 
     def save(self, *args, **kwargs):
         config = cloudinary.config(secure=True)
@@ -35,12 +36,11 @@ class Participantes(models.Model):
 
             response = cloudinary.uploader.upload(
                 buffer,
-                public_id=f"qr_codes/{self.telefono}",
+                public_id=f"qr_codes/{self.telefono}_{self.id}",
                 unique_filename=True,
                 overwrite=True
             )
 
-            print(response)
             self.qr_code = response["secure_url"]
 
         super().save(*args, **kwargs)

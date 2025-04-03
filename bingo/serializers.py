@@ -11,7 +11,7 @@ class ParticipanteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Participantes
         fields = '__all__'
-        read_only_fields = ['entregado_por']
+        read_only_fields = ['entregado_por', 'correo_enviado']
 
     def create(self, validated_data):
         entregado_por_data = validated_data.pop('entregado_por', None)
